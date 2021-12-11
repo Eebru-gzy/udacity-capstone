@@ -1,0 +1,26 @@
+const express = require("express");
+const app = express();
+const morgan = require("morgan");
+const cors = require("cors");
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(morgan("tiny"));
+
+//The very root route
+app.get("/", (req, res) => {
+	res.send({ message: "WELCOME!! Backend For Alles Insurance " });
+});
+
+app.get("/healthz", (req, res) => {
+	res.json({
+		status: "OK",
+		uptime: process.uptime()
+	});
+});
+
+const PORT = process.env.APPPORT || 5000;
+
+app.listen(PORT, () => {
+	console.log(`Server Started at port ${PORT}`);
+});

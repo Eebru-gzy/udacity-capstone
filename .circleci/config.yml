@@ -113,17 +113,9 @@ jobs:
           name: Get Service URL and curl
           command: |
             aws eks update-kubeconfig --name node-app --region us-west-2
-            URL=$(kubectl get svc node-service -n node-namespace -o json | jq -r .status.loadBalancer.ingress[0].hostname)
-            echo ${URL}
-            curl -s ${URL} > app.txt
-            cat app.txt
-            if [ cat app.txt | grep "WELCOME!!" ] then;
-            echo working working
-                exit 0
-            else
-                echo not working
-                exit 1
-            fi
+            kubectl describe svc node-service -n node-namespace > ser.txt
+            cat ser.txt
+            
       # - destroy-cluster
 
 workflows:

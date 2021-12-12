@@ -97,7 +97,7 @@ jobs:
           name: Deploying node-appv1
           command: |
               kubectl apply -f node-appv1.yml
-      - destroy-cluster
+      # - destroy-cluster
 
   smoke-test-v1:
     docker:
@@ -126,5 +126,5 @@ workflows:
       #     requires: [build-and-push-node1]
       - create-eks-cluster-app
          # # requires: [build-and-push-node1]
-      # - smoke-test-v1:
-      #     requires: [create-eks-cluster-app]
+      - smoke-test-v1:
+          requires: [create-eks-cluster-app]

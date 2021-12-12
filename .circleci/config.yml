@@ -44,6 +44,7 @@ jobs:
             yarn run lint
   
   build-and-push-node1:
+    machine: true
     steps:
       - checkout
       - run:
@@ -54,7 +55,7 @@ jobs:
             docker login -u eebru -p $DOCKERPASS
             docker push eebru/capstone:v1
   
-    build-and-push-node2:
+  build-and-push-node2:
     machine: true
     steps:
       - checkout

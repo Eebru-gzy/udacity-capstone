@@ -50,7 +50,7 @@ jobs:
       - run:
           name: Build docker container for V1
           command: |
-            yarn
+            npm i
             docker build -t  eebru/capstone:v1
             docker login -u eebru -p $DOCKERPASS
             docker push eebru/capstone:v1
@@ -62,7 +62,7 @@ jobs:
       - run:
           name: Build docker container for V1
           command: |
-            yarn
+            npm i
             docker build -t  eebru/capstone:v2
             docker login -u eebru -p $DOCKERPASS
             docker push eebru/capstone:v2

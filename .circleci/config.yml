@@ -59,22 +59,6 @@ jobs:
             docker login -u eebru -p $DOCKERPASS
             docker push eebru/capstone:v1
   
-  build-and-push-node2:
-    machine: true
-    steps:
-      - checkout
-      - run:
-          name: Build docker container for V1
-          command: |
-            curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
-            sudo apt install nodejs
-            node -v
-            npm -v
-            npm i
-            docker build -t eebru/capstone:v2 .
-            docker login -u eebru -p $DOCKERPASS
-            docker push eebru/capstone:v2
-
   create-eks-cluster-app:
     docker:
       - image: amazon/aws-cli
@@ -104,11 +88,15 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
+      - install-kubectl-and-eksctl
+      - run:
+          name: Deploying node-appv1
+          command: |
+              kubectl apply -f node-appv1.yml
       - run:
           name: Installing dependencies
           command: |
             yum install jq -y
-      - install-kubectl-and-eksctl
       - run:
           name: Get Service URL and curl
           command: |
@@ -125,6 +113,20 @@ jobs:
                 exit 1
             fi
       # - destroy-cluster
+  
+    build-and-push-node2:
+    machine: true
+    steps:
+      - checkout
+      - run:
+          name: Build docker container for V2
+          command: |
+            curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+            sudo apt install nodejs
+            docker build -t eebru/capstone:v2 .
+            docker login -u eebru -p $DOCKERPASS
+            docker push eebru/capstone:v2
+  
 
 workflows:
   the_jobs:

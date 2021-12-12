@@ -138,8 +138,8 @@ jobs:
           command: |
             aws eks update-kubeconfig --name node-app --region us-east-1
             kubectl apply -f node-appv2.yml
-            kubectl rollout status deployment/node-app-deployment -n node-namespace
-            kubectl -n node-namespace get pods,rs,deploy,svc -o wide --show-labels
+            # kubectl rollout status deployment/node-app-deployment -n node-namespace
+            # kubectl -n node-namespace get pods,rs,deploy,svc -o wide --show-labels
 
   smoke-test-v2:
     docker:
@@ -165,7 +165,7 @@ jobs:
                 echo "not working"
                 exit 1
             fi
-      - undo-rollout
+      # - undo-rollout
 
 workflows:
   the_jobs:
@@ -177,9 +177,9 @@ workflows:
       #   #  requires: [build-and-push-node1]
       # - smoke-test-v1
       #     # requires: [build-and-push-node1, create-eks-cluster-app]
-      - build-and-push-node2
+      # - build-and-push-node2
           # requires: [smoke-test-v1]
-      - rollout-deployment:
-          requires: [build-and-push-node2]
+      - rollout-deployment
+          # requires: [build-and-push-node2]
       - smoke-test-v2:
           requires: [rollout-deployment]

@@ -100,8 +100,8 @@ jobs:
             URL=$(kubectl get svc node-service -n node-namespace -o json | jq -r .status.loadBalancer.ingress[0].hostname)
             echo ${URL}
             curl -s ${URL}:5000 > node-app.txt
-            if [[ cat node-app.txt | grep "WELCOME!! Backend For Alles Insurance "  ]]
-            then
+            cat node-app.txt
+            if grep -q -e "WELCOME!! Backend For Alles Insurance" node-app.txt; then
                 echo "working working"
                 exit 0
             else

@@ -40,8 +40,8 @@ jobs:
       - run:
           name: Dockerfiles lint
           command: |
-            yarn
-            yarn run lint
+            npm install
+            npm run lint
   
   build-and-push-node1:
     machine: true

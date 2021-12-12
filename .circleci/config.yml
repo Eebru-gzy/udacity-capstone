@@ -99,7 +99,30 @@ jobs:
               kubectl apply -f node-appv1.yml
       - destroy-cluster
 
-
+  smoke-test-v1:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: Installing dependencies
+          command: |
+            yum install jq -y
+      - install-kubectl-and-eksctl
+      - run:
+          name: Get Service URL and curl
+          command: |
+            URL=$(kubectl get svc flask-service -n node-namespace -o json | jq -r .status.loadBalancer.ingress[0].hostname)
+            echo ${URL}
+            curl -s ${URL} --output app.txt
+            if app.txt grep "Welcome" then;
+            echo working working
+                exit 0
+            else
+                echo not working
+                exit 1
+            fi
+      - destroy-cluster
 
 workflows:
   the_jobs:
@@ -109,6 +132,6 @@ workflows:
       #     requires: [lint-app]
       # - build-and-push-node2:
       #     requires: [build-and-push-node1]
-      - create-eks-cluster-app
+      # - create-eks-cluster-app
           # requires: [build-and-push-node1]
-          
+      - smoke-test-v1

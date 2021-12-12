@@ -90,11 +90,6 @@ jobs:
       - checkout
       - install-kubectl-and-eksctl
       - run:
-          name: Deploying node-appv1
-          command: |
-              aws eks update-kubeconfig --name node-app --region us-east-2
-              kubectl apply -f node-appv1.yml
-      - run:
           name: Installing dependencies
           command: |
             yum install jq -y
@@ -132,12 +127,12 @@ jobs:
 workflows:
   the_jobs:
     jobs:
-      # - lint-app
+      - lint-app
       # - build-and-push-node1:
       #     requires: [lint-app]
       # - build-and-push-node2:
       #     requires: [build-and-push-node1]
-      # - create-eks-cluster-app
-         # # requires: [build-and-push-node1]
+      - create-eks-cluster-app
+        #  requires: [build-and-push-node1]
       - smoke-test-v1
-          # requires: [create-eks-cluster-app]
+          requires: [create-eks-cluster-app]

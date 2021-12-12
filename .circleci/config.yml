@@ -44,7 +44,7 @@ jobs:
             yarn run lint
   
   build-and-push-node1:
-    machine: "true"
+    machine: true
     steps:
       - checkout
       - run:
@@ -56,7 +56,7 @@ jobs:
             docker push eebru/capstone:v1
   
     build-and-push-node2:
-    machine: "true"
+    machine: true
     steps:
       - checkout
       - run:

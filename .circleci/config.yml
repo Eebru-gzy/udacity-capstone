@@ -70,13 +70,13 @@ jobs:
           command: |
                   eksctl create cluster \
                   --name node-app \
-                  --region us-east-2 \
+                  --region us-east-1 \
                   --with-oidc \
                   --ssh-access \
                   --ssh-public-key udacity
                   kubectl get nodes -o wide
                   kubectl create namespace node-namespace
-                  aws eks update-kubeconfig --name node-app --region us-east-2
+                  aws eks update-kubeconfig --name node-app --region us-east-1
       - run:
           name: Deploying node-appv1
           command: |
@@ -96,7 +96,7 @@ jobs:
       - run:
           name: Get Service URL and curl
           command: |
-            aws eks update-kubeconfig --name node-app --region us-east-2
+            aws eks update-kubeconfig --name node-app --region us-east-1
             URL=$(kubectl get svc node-service -n node-namespace -o json | jq -r .status.loadBalancer.ingress[0].hostname)
             echo ${URL}
             curl -s ${URL} > app.txt

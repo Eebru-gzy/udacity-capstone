@@ -58,11 +58,12 @@ jobs:
       - run:
           name: Build docker container for V1
           command: |
-            curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
-            sudo apt install nodejs
-            docker build -t  eebru/capstone:v1 .
-            docker login -u eebru -p $DOCKERPASS
-            docker push eebru/capstone:v1
+            echo
+            # curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+            # sudo apt install nodejs
+            # docker build -t  eebru/capstone:v1 .
+            # docker login -u eebru -p $DOCKERPASS
+            # docker push eebru/capstone:v1
   
   create-eks-cluster-app:
     docker:
@@ -73,19 +74,20 @@ jobs:
       - run:
           name: Creating K8S cluster
           command: |
-                  eksctl create cluster \
-                  --name node-app \
-                  --region us-east-1 \
-                  --with-oidc \
-                  --ssh-access \
-                  --ssh-public-key udacity
-                  kubectl get nodes -o wide
-                  kubectl create namespace node-namespace
-                  aws eks update-kubeconfig --name node-app --region us-east-1
-      - run:
-          name: Deploying node-appv1
-          command: |
-              kubectl apply -f node-appv1.yml
+                  echo
+      #             eksctl create cluster \
+      #             --name node-app \
+      #             --region us-east-1 \
+      #             --with-oidc \
+      #             --ssh-access \
+      #             --ssh-public-key udacity
+      #             kubectl get nodes -o wide
+      #             kubectl create namespace node-namespace
+      #             aws eks update-kubeconfig --name node-app --region us-east-1
+      # - run:
+      #     name: Deploying node-appv1
+      #     command: |
+      #         kubectl apply -f node-appv1.yml
       # - destroy-cluster
 
   smoke-test-v1:
@@ -93,25 +95,26 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
-      - install-kubectl-and-eksctl
+      # - install-kubectl-and-eksctl
       - run:
           name: Installing dependencies
           command: |
-            yum install jq -y
-      - run:
-          name: Get Service URL and curl
-          command: |
-            aws eks update-kubeconfig --name node-app --region us-east-1
-            URL=$(kubectl get svc node-service -n node-namespace -o json | jq -r .status.loadBalancer.ingress[0].hostname)
-            curl -s ${URL}:5000 > node-app.txt
-            cat node-app.txt
-            if grep -q -e "WELCOME!! This is App Version1" node-app.txt; then
-                echo "working working"
-                exit 0
-            else
-                echo "not working"
-                exit 1
-            fi
+              echo
+      #       yum install jq -y
+      # - run:
+      #     name: Get Service URL and curl
+      #     command: |
+      #       aws eks update-kubeconfig --name node-app --region us-east-1
+      #       URL=$(kubectl get svc node-service -n node-namespace -o json | jq -r .status.loadBalancer.ingress[0].hostname)
+      #       curl -s ${URL}:5000 > node-app.txt
+      #       cat node-app.txt
+      #       if grep -q -e "WELCOME!! This is App Version1" node-app.txt; then
+      #           echo "working working"
+      #           exit 0
+      #       else
+      #           echo "not working"
+      #           exit 1
+      #       fi
       # - destroy-cluster
   
   build-and-push-node2:
@@ -170,16 +173,16 @@ jobs:
 workflows:
   the_jobs:
     jobs:
-      # - lint-app
-      # - build-and-push-node1:
-      #     requires: [lint-app]
-      # # - create-eks-cluster-app
-      #   #  requires: [build-and-push-node1]
-      # - smoke-test-v1
-      #     # requires: [build-and-push-node1, create-eks-cluster-app]
-      # - build-and-push-node2
-          # requires: [smoke-test-v1]
-      - rollout-deployment
-          # requires: [build-and-push-node2]
+      - lint-app
+      - build-and-push-node1:
+          requires: [lint-app]
+      - create-eks-cluster-app
+         requires: [build-and-push-node1]
+      - smoke-test-v1
+          requires: [build-and-push-node1, create-eks-cluster-app]
+      - build-and-push-node2:
+          requires: [smoke-test-v1]
+      - rollout-deployment:
+          requires: [build-and-push-node2]
       - smoke-test-v2:
           requires: [rollout-deployment]

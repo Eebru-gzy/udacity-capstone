@@ -136,7 +136,7 @@ workflows:
       #     requires: [lint-app]
       # - build-and-push-node2:
       #     requires: [build-and-push-node1]
-      - create-eks-cluster-app
+      # - create-eks-cluster-app
          # # requires: [build-and-push-node1]
-      - smoke-test-v1:
-          requires: [create-eks-cluster-app]
+      - smoke-test-v1
+          # requires: [create-eks-cluster-app]

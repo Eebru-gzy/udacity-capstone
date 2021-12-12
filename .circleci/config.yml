@@ -44,7 +44,6 @@ jobs:
             yarn run lint
   
   build-and-push-node1:
-    machine: true
     steps:
       - checkout
       - run:

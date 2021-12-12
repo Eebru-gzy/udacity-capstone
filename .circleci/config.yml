@@ -50,7 +50,10 @@ jobs:
       - run:
           name: Build docker container for V1
           command: |
-            docker -v
+            curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+            sudo apt install nodejs
+            node -v
+            npm -v
             npm i
             docker build -t  eebru/capstone:v1
             docker login -u eebru -p $DOCKERPASS
@@ -63,6 +66,10 @@ jobs:
       - run:
           name: Build docker container for V1
           command: |
+            curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+            sudo apt install nodejs
+            node -v
+            npm -v
             npm i
             docker build -t  eebru/capstone:v2
             docker login -u eebru -p $DOCKERPASS

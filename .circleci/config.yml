@@ -67,3 +67,11 @@ jobs:
             docker login -u eebru -p $DOCKERPASS
             docker push eebru/capstone:v2
 
+
+
+workflows:
+  the_jobs:
+    jobs:
+      - lint-app
+      - build-and-push-node1
+          requires: [lint-app]

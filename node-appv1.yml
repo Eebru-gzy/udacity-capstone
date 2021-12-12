@@ -45,6 +45,6 @@ spec:
     app: node-label
   type: LoadBalancer
   ports:
-    - protocol: tcp
+    - protocol: TCP
       port: 5000
       targetPort: 5000

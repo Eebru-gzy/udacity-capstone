@@ -101,13 +101,7 @@ jobs:
             echo ${URL}
             curl -s ${URL}:5000 > app.txt
             cat app.txt
-            if [ cat app.txt | grep "WELCOME!!" ] then;
-            echo working working
-                exit 0
-            else
-                echo not working
-                exit 1
-            fi
+            
       # - destroy-cluster
   
   build-and-push-node2:

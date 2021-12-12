@@ -55,7 +55,7 @@ jobs:
             node -v
             npm -v
             npm i
-            docker build -t  eebru/capstone:v1
+            docker build -t  eebru/capstone:v1 .
             docker login -u eebru -p $DOCKERPASS
             docker push eebru/capstone:v1
   
@@ -71,7 +71,7 @@ jobs:
             node -v
             npm -v
             npm i
-            docker build -t  eebru/capstone:v2
+            docker build -t eebru/capstone:v2 .
             docker login -u eebru -p $DOCKERPASS
             docker push eebru/capstone:v2
 

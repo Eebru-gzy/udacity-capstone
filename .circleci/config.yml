@@ -75,4 +75,4 @@ workflows:
       - lint-app
       - build-and-push-node1
           requires: 
-          - lint-app
+            - lint-app

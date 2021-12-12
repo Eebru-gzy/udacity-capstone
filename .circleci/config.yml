@@ -59,11 +59,11 @@ jobs:
           name: Build docker container for V1
           command: |
             echo
-            # curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
-            # sudo apt install nodejs
-            # docker build -t  eebru/capstone:v1 .
-            # docker login -u eebru -p $DOCKERPASS
-            # docker push eebru/capstone:v1
+            curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+            sudo apt install nodejs
+            docker build -t  eebru/capstone:v1 .
+            docker login -u eebru -p $DOCKERPASS
+            docker push eebru/capstone:v1
   
   create-eks-cluster-app:
     docker:
@@ -75,47 +75,47 @@ jobs:
           name: Creating K8S cluster
           command: |
                   echo
-      #             eksctl create cluster \
-      #             --name node-app \
-      #             --region us-east-1 \
-      #             --with-oidc \
-      #             --ssh-access \
-      #             --ssh-public-key udacity
-      #             kubectl get nodes -o wide
-      #             kubectl create namespace node-namespace
-      #             aws eks update-kubeconfig --name node-app --region us-east-1
-      # - run:
-      #     name: Deploying node-appv1
-      #     command: |
-      #         kubectl apply -f node-appv1.yml
-      # - destroy-cluster
+                  eksctl create cluster \
+                  --name node-app \
+                  --region us-east-1 \
+                  --with-oidc \
+                  --ssh-access \
+                  --ssh-public-key udacity
+                  kubectl get nodes -o wide
+                  kubectl create namespace node-namespace
+                  aws eks update-kubeconfig --name node-app --region us-east-1
+      - run:
+          name: Deploying node-appv1
+          command: |
+              kubectl apply -f node-appv1.yml
+      - destroy-cluster
 
   smoke-test-v1:
     docker:
       - image: amazon/aws-cli
     steps:
       - checkout
-      # - install-kubectl-and-eksctl
+      - install-kubectl-and-eksctl
       - run:
           name: Installing dependencies
           command: |
               echo
-      #       yum install jq -y
-      # - run:
-      #     name: Get Service URL and curl
-      #     command: |
-      #       aws eks update-kubeconfig --name node-app --region us-east-1
-      #       URL=$(kubectl get svc node-service -n node-namespace -o json | jq -r .status.loadBalancer.ingress[0].hostname)
-      #       curl -s ${URL}:5000 > node-app.txt
-      #       cat node-app.txt
-      #       if grep -q -e "WELCOME!! This is App Version1" node-app.txt; then
-      #           echo "working working"
-      #           exit 0
-      #       else
-      #           echo "not working"
-      #           exit 1
-      #       fi
-      # - destroy-cluster
+            yum install jq -y
+      - run:
+          name: Get Service URL and curl
+          command: |
+            aws eks update-kubeconfig --name node-app --region us-east-1
+            URL=$(kubectl get svc node-service -n node-namespace -o json | jq -r .status.loadBalancer.ingress[0].hostname)
+            curl -s ${URL}:5000 > node-app.txt
+            cat node-app.txt
+            if grep -q -e "WELCOME!! This is App Version1" node-app.txt; then
+                echo "working working"
+                exit 0
+            else
+                echo "not working"
+                exit 1
+            fi
+      - destroy-cluster
   
   build-and-push-node2:
     machine: true
@@ -141,8 +141,8 @@ jobs:
           command: |
             aws eks update-kubeconfig --name node-app --region us-east-1
             kubectl apply -f node-appv2.yml
-            # kubectl rollout status deployment/node-app-deployment -n node-namespace
-            # kubectl -n node-namespace get pods,rs,deploy,svc -o wide --show-labels
+            kubectl rollout status deployment/node-app-deployment -n node-namespace
+            kubectl -n node-namespace get pods,rs,deploy,svc -o wide --show-labels
 
   smoke-test-v2:
     docker:
@@ -168,7 +168,7 @@ jobs:
                 echo "not working"
                 exit 1
             fi
-      # - undo-rollout
+      - undo-rollout
 
 workflows:
   the_jobs:

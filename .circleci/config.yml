@@ -75,6 +75,30 @@ jobs:
             docker login -u eebru -p $DOCKERPASS
             docker push eebru/capstone:v2
 
+  create-eks-cluster-app:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - install-kubectl-and-eksctl
+      - run:
+          name: Creating K8S cluster
+          command: |
+                  eksctl create cluster \
+                  --name node-app \
+                  --region us-west-2 \
+                  --with-oidc \
+                  --ssh-access \
+                  --ssh-public-key udacity
+                  kubectl get nodes -o wide
+                  kubectl create namespace node-namespace
+                  aws eks update-kubeconfig --name node-app --region us-west-2
+      - run:
+          name: Deploying node-appv1
+          command: |
+              kubectl apply -f node-appv1.yml
+      - destroy-cluster
+
 
 
 workflows:
@@ -82,5 +106,9 @@ workflows:
     jobs:
       - lint-app
       - build-and-push-node1:
-          requires: 
-            - lint-app
+          requires: [lint-app]
+      - build-and-push-node2:
+          requires: [build-and-push-node1]
+      - create-eks-cluster-app:
+          requires: [build-and-push-node1]
+          

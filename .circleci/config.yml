@@ -92,6 +92,7 @@ jobs:
       - run:
           name: Deploying node-appv1
           command: |
+              aws eks update-kubeconfig --name node-app --region us-east-2
               kubectl apply -f node-appv1.yml
       - run:
           name: Installing dependencies

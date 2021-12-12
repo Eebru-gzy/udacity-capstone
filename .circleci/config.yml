@@ -182,4 +182,4 @@ workflows:
       - rollout-deployment:
           requires: [build-and-push-node2]
       - smoke-test-v2:
-          requires: [rollout-deplyment]
+          requires: [rollout-deployment]

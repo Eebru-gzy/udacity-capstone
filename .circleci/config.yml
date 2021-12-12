@@ -134,5 +134,5 @@ workflows:
       #     requires: [build-and-push-node1]
       - create-eks-cluster-app
         #  requires: [build-and-push-node1]
-      - smoke-test-v1
+      - smoke-test-v1:
           requires: [create-eks-cluster-app]

@@ -112,7 +112,7 @@ jobs:
       - run:
           name: Get Service URL and curl
           command: |
-            URL=$(kubectl get svc flask-service -n node-namespace -o json | jq -r .status.loadBalancer.ingress[0].hostname)
+            URL=$(kubectl get svc node-service -n node-namespace -o json | jq -r .status.loadBalancer.ingress[0].hostname)
             echo ${URL}
             curl -s ${URL} --output app.txt
             if app.txt grep "Welcome" then;
@@ -132,6 +132,6 @@ workflows:
       #     requires: [lint-app]
       # - build-and-push-node2:
       #     requires: [build-and-push-node1]
-      # - create-eks-cluster-app
+      - create-eks-cluster-app
           # requires: [build-and-push-node1]
       - smoke-test-v1

@@ -114,7 +114,7 @@ jobs:
             fi
       # - destroy-cluster
   
-    build-and-push-node2:
+  build-and-push-node2:
     machine: true
     steps:
       - checkout

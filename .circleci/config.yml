@@ -115,8 +115,9 @@ jobs:
             aws eks update-kubeconfig --name node-app --region us-west-2
             URL=$(kubectl get svc node-service -n node-namespace -o json | jq -r .status.loadBalancer.ingress[0].hostname)
             echo ${URL}
-            curl -s ${URL} --output app.txt
-            if app.txt grep "WELCOME!!" then;
+            curl -s ${URL} > app.txt
+            cat app.txt
+            if [ cat app.txt | grep "WELCOME!!" ] then;
             echo working working
                 exit 0
             else
@@ -128,7 +129,7 @@ jobs:
 workflows:
   the_jobs:
     jobs:
-      - lint-app
+      # - lint-app
       # - build-and-push-node1:
       #     requires: [lint-app]
       # - build-and-push-node2:

@@ -112,6 +112,7 @@ jobs:
       - run:
           name: Get Service URL and curl
           command: |
+            aws eks update-kubeconfig --name node-app --region us-west-2
             kubectl get svc node-service -n node-namespace -o wide
             
       # - destroy-cluster
@@ -124,7 +125,7 @@ workflows:
       #     requires: [lint-app]
       # - build-and-push-node2:
       #     requires: [build-and-push-node1]
-      - create-eks-cluster-app
+      # - create-eks-cluster-app
          # # requires: [build-and-push-node1]
       - smoke-test-v1:
           requires: [create-eks-cluster-app]

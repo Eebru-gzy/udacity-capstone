@@ -74,4 +74,5 @@ workflows:
     jobs:
       - lint-app
       - build-and-push-node1
-          requires: [lint-app]
+          requires: 
+          - lint-app

@@ -180,11 +180,11 @@ workflows:
       #     requires: [lint-app]
       # # - create-eks-cluster-app
       #   #  requires: [build-and-push-node1]
-      - smoke-test-v1
-      #    # # requires: [build-and-push-node1, create-eks-cluster-app]
-      # - build-and-push-node2:
-      #     requires: [smoke-test-v1]
-      # - rollout-deployment:
-      #     requires: [build-and-push-node2]
-      # - smoke-test-v2:
-      #     requires: [rollout-deployment]
+      # - smoke-test-v1
+      #     # requires: [build-and-push-node1, create-eks-cluster-app]
+      - build-and-push-node2:
+          # requires: [smoke-test-v1]
+      - rollout-deployment:
+          requires: [build-and-push-node2]
+      - smoke-test-v2:
+          requires: [rollout-deployment]

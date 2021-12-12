@@ -99,10 +99,9 @@ jobs:
             aws eks update-kubeconfig --name node-app --region us-east-1
             URL=$(kubectl get svc node-service -n node-namespace -o json | jq -r .status.loadBalancer.ingress[0].hostname)
             echo ${URL}
-            curl -s ${URL}:5000 > app.txt
-            cat app.txt
-            if [ cat app.txt | grep "WELCOME!!" ] then;
-            echo "working working"
+            curl -s ${URL}:5000 --output flask-app.txt
+            if flask-app.txt grep "Welcome" then;
+                echo "working working"
                 exit 0
             else
                 echo "not working"
@@ -123,11 +122,23 @@ jobs:
             docker login -u eebru -p $DOCKERPASS
             docker push eebru/capstone:v2
   
+  rollout-deployment:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - install-kubectl-and-eksctl
+      - run:
+          name: Deploying node-appv1
+          command: |
+            aws eks update-kubeconfig --name node-app --region us-east-1
+            kubectl apply -f node-appv1.yml
+  
 
 workflows:
   the_jobs:
     jobs:
-      - lint-app
+      # - lint-app
       # - build-and-push-node1:
       #     requires: [lint-app]
       # - build-and-push-node2:

@@ -112,17 +112,9 @@ jobs:
       - run:
           name: Get Service URL and curl
           command: |
-            URL=$(kubectl get svc node-service -n node-namespace -o json | jq -r .status.loadBalancer.ingress[0].hostname)
-            echo ${URL}
-            curl -s ${URL} --output app.txt
-            if app.txt grep "Welcome" then;
-            echo working working
-                exit 0
-            else
-                echo not working
-                exit 1
-            fi
-      - destroy-cluster
+            kubectl get svc node-service -n node-namespace -o wide
+            
+      # - destroy-cluster
 
 workflows:
   the_jobs:

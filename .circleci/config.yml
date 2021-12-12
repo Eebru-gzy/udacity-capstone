@@ -95,6 +95,11 @@ jobs:
       - checkout
       - install-kubectl-and-eksctl
       - run:
+          name: Deploying node-appv1
+          command: |
+              aws eks update-kubeconfig --name node-app --region us-east-1
+              kubectl apply -f node-appv1.yml
+      - run:
           name: Installing dependencies
           command: |
             yum install jq -y
@@ -105,7 +110,7 @@ jobs:
             URL=$(kubectl get svc node-service -n node-namespace -o json | jq -r .status.loadBalancer.ingress[0].hostname)
             curl -s ${URL}:5000 > node-app.txt
             cat node-app.txt
-            if grep -q -e "WELCOME!! Backend For Alles Insurance" node-app.txt; then
+            if grep -q -e "WELCOME!! This is App Version1" node-app.txt; then
                 echo "working working"
                 exit 0
             else
@@ -170,12 +175,12 @@ jobs:
 workflows:
   the_jobs:
     jobs:
-      - lint-app
+      # - lint-app
       # - build-and-push-node1:
       #     requires: [lint-app]
       # # - create-eks-cluster-app
       #   #  requires: [build-and-push-node1]
-      # - smoke-test-v1
+      - smoke-test-v1
       #     # requires: [build-and-push-node1, create-eks-cluster-app]
       # - build-and-push-node2:
       #     requires: [smoke-test-v1]

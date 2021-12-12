@@ -8,7 +8,7 @@ app.use(morgan("tiny"));
 
 //The very root route
 app.get("/", (req, res) => {
-	res.send({ message: "WELCOME!! Backend For Alles Insurance " });
+	res.send({ message: "WELCOME!! This is App Version1" });
 });
 
 app.get("/healthz", (req, res) => {
